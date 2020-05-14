@@ -1,13 +1,14 @@
 import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeLayout from '../layout/HomeLayout.vue';
+import DashboardLayout from '../layout/DashboardLayout.vue';
 
 Vue.use(VueRouter);
 
 const routes = [
   {
     path: '/',
-    redirect: 'Home',
+    redirect: '/home',
     component: HomeLayout,
     children: [
       {
@@ -23,6 +24,18 @@ const routes = [
         // which is lazy-loaded when the route is visited.
         component: () =>
           import(/* webpackChunkName: "about" */ '../views/Login.vue'),
+      },
+    ],
+  },
+  {
+    path: '/',
+    redirect: '/dashboard',
+    component: DashboardLayout,
+    children: [
+      {
+        path: '/dashboard',
+        name: 'Dashboard',
+        component: () => import('../views/Dashboard.vue'),
       },
     ],
   },

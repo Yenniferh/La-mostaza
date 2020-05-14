@@ -32,19 +32,14 @@
         <v-btn color="accent" text rounded>{{ link.text }}</v-btn>
       </router-link>
 
-      <v-btn
-        class="ml-4"
-        color="primary"
-        active-class="black darken-1"
-        :to="{ name: 'Login' }"
-      >
+      <v-btn class="ml-4" color="primary" active-class="black darken-1" :to="{ name: 'Login' }">
         <span class="mr-2 font-weight-bold">Panel de empleados</span>
         <v-icon>mdi-account-tie</v-icon>
       </v-btn>
     </v-appBar>
 
     <v-content>
-      <router-view></router-view>
+      <router-view />
     </v-content>
     <v-footer color="primary" padless>
       <v-row justify="center">
@@ -59,27 +54,27 @@
 
 <script>
 export default {
-  name: 'HomeLayout',
+  name: "HomeLayout",
 
   data: () => ({
     links: [
       {
-        text: 'Inicio',
-        href: `#inicio`,
+        text: "Inicio",
+        href: `#inicio`
       },
       {
-        text: 'Quiénes Somos',
-        href: `#who`,
+        text: "Quiénes Somos",
+        href: `#who`
       },
       {
-        text: 'Menú',
-        href: `#menu`,
+        text: "Menú",
+        href: `#menu`
       },
       {
-        text: 'Contáctanos',
-        href: `#contact`,
-      },
-    ],
-  }),
+        text: "Contáctanos",
+        href: `#contact`
+      }
+    ]
+  })
 };
 </script>
