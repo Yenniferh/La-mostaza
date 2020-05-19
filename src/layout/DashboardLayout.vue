@@ -5,13 +5,24 @@
         v-if="!this.$vuetify.breakpoint.xsOnly"
         expand-on-hover
         mini-variant
+        mini-variant-width="80"
         permanent
         app
         overflow
       >
         <v-list-item>
           <v-list-item-content>
-            <v-list-item-title class="title">La mostaza</v-list-item-title>
+            <v-list-item-avatar>
+              <v-img
+                alt="Logo de La Mostaza"
+                class="px-0 mx-0"
+                contain
+                :src="require('../assets/images/Logo.svg')"
+                transition="scale-transition"
+                width="40"
+              />
+            </v-list-item-avatar>
+            <v-list-item-title class="title primary--text">La Mostaza</v-list-item-title>
             <v-list-item-subtitle>Panel administrativo</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -19,7 +30,7 @@
         <v-divider></v-divider>
 
         <v-list dense nav class="py-3 my-2">
-          <v-list-item v-for="item in items" :key="item.label" link>
+          <v-list-item v-for="item in items" :key="item.label" link :to="{path:item.path}">
             <v-list-item-icon>
               <v-icon color="primary" size="30">{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -31,10 +42,20 @@
         </v-list>
       </v-navigation-drawer>
     </v-card>
-
-    <v-app-bar app>
-      <v-toolbar-title>Vuetify</v-toolbar-title>
-    </v-app-bar>
+    <v-container>
+      <v-app-bar app>
+        <v-toolbar-title>
+          <router-link
+            :to="$route.path"
+            class="primary-text text-uppercase text-dec"
+          >{{$route.name}}</router-link>
+        </v-toolbar-title>
+        <v-spacer />
+        <router-link to="/home">
+          <v-btn color="primary" small>Cerrar sesión</v-btn>
+        </router-link>
+      </v-app-bar>
+    </v-container>
 
     <v-content>
       <router-view />
@@ -42,7 +63,7 @@
 
     <v-footer v-if="!this.$vuetify.breakpoint.smAndUp" app padless>
       <v-bottom-navigation shift color="primary">
-        <v-btn v-for="item in items" :key="item.label">
+        <v-btn v-for="item in items" :key="item.label" :to="{path:item.path}">
           <span>{{item.label}}</span>
           <v-icon>{{item.icon}}</v-icon>
         </v-btn>
@@ -52,28 +73,34 @@
 </template>
 
 <script>
+const startPath = "/admin";
 export default {
   data: () => ({
     items: [
       {
         icon: "mdi-finance",
-        label: "Balance"
+        label: "Balance",
+        path: startPath + "/dashboard"
       },
       {
         icon: "mdi-silverware",
-        label: "Menú"
+        label: "Menú",
+        path: startPath + "/menu"
       },
       {
         icon: "mdi-fridge",
-        label: "Inventario"
+        label: "Inventario",
+        path: startPath + "/inventario"
       },
       {
         icon: "mdi-nutrition",
-        label: "Órdenes"
+        label: "Órdenes",
+        path: startPath + "/ordenes"
       },
       {
         icon: "mdi-sale",
-        label: "Descuentos"
+        label: "Descuentos",
+        path: startPath + "/descuentos"
       }
     ],
     footer: {

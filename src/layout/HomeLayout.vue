@@ -3,21 +3,12 @@
     <v-appBar app color="white" dark absolute>
       <div class="d-flex align-center">
         <v-img
-          alt="Vuetify Logo"
+          alt="Logo de La Mostaza"
           class="shrink mr-2"
           contain
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-logo-dark.png"
+          :src="require('../assets/images/Logo.svg')"
           transition="scale-transition"
           width="40"
-        />
-
-        <v-img
-          alt="Vuetify Name"
-          class="shrink mt-1 hidden-sm-and-down"
-          contain
-          min-width="100"
-          src="https://cdn.vuetifyjs.com/images/logos/vuetify-name-dark.png"
-          width="100"
         />
       </div>
 
@@ -27,12 +18,12 @@
         :key="i"
         to="/home"
         v-scroll-to="link.href"
-        class="my-2"
+        class="my-2 text-dec"
       >
         <v-btn color="accent" text rounded>{{ link.text }}</v-btn>
       </router-link>
 
-      <v-btn class="ml-4" color="primary" active-class="black darken-1" :to="{ name: 'Login' }">
+      <v-btn class="ml-4" color="primary" active-class="darken-1" :to="{ name: 'Login' }">
         <span class="mr-2 font-weight-bold">Panel de empleados</span>
         <v-icon>mdi-account-tie</v-icon>
       </v-btn>

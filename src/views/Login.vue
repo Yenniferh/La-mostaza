@@ -51,10 +51,6 @@ export default {
     password: "",
     passwordRules: [v => !!v || "Password is required"]
   }),
-  watch: {
-    email: () => this.$refs.form.validate(),
-    password: () => this.$refs.form.validate()
-  },
   methods: {
     async login(e) {
       e.preventDefault();
@@ -62,7 +58,7 @@ export default {
       if (this.valid) {
         setTimeout(() => {
           alert(`email: ${this.email} pass: ${this.password}`);
-          this.$router.push("/dashboard");
+          this.$router.push("/admin/dashboard");
         }, [4000]);
       }
     }

@@ -28,14 +28,34 @@ const routes = [
     ],
   },
   {
-    path: '/',
-    redirect: '/dashboard',
+    path: '/admin',
+    redirect: '/admin/dashboard',
     component: DashboardLayout,
     children: [
       {
-        path: '/dashboard',
+        path: '/admin/dashboard',
         name: 'Dashboard',
         component: () => import('../views/Dashboard.vue'),
+      },
+      {
+        path: '/admin/menu',
+        name: 'Menu',
+        component: () => import('../views/Menu.vue'),
+      },
+      {
+        path: '/admin/inventario',
+        name: 'Inventario',
+        component: () => import('../views/Inventario.vue'),
+      },
+      {
+        path: '/admin/ordenes',
+        name: 'Ordenes',
+        component: () => import('../views/Ordenes.vue'),
+      },
+      {
+        path: '/admin/descuentos',
+        name: 'Descuentos',
+        component: () => import('../views/Descuentos.vue'),
       },
     ],
   },

@@ -7,7 +7,6 @@
           aspect-ratio="1.7"
           :lazy-src="require('../../assets/images/chef-min.jpg')"
         >
-          <!-- gradient="to right, rgba(0,0,0,.97), rgba(0,0,0,.65)" -->
           <v-container class="hero--gradient fill-height pa-0 ma-0">
             <v-row align="center" class="ml-8" no-gutters>
               <v-col cols="12" xs="12" sm="6">

@@ -1,0 +1,20 @@
+.container--gradient {
+  width: 100vw;
+  max-width: 100vw;
+  height: 40vh;
+  background-image: linear-gradient(
+    to right,
+    hsla(40, 81, 49, 1) 0%,
+    hsla(40, 81, 49, 0.93) 30%,
+    hsla(40, 81, 25, 0.95) 60%,
+    hsla(0, 0, 0, 1) 100%
+  );
+}
+
+.margin-neg {
+  margin-top: -10%;
+}
+
+.text-dec {
+  text-decoration: none;
+}
