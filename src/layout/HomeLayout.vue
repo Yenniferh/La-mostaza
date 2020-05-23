@@ -32,11 +32,14 @@
     <v-content>
       <router-view />
     </v-content>
-    <v-footer color="primary" padless>
-      <v-row justify="center">
-        <v-col class="primary lighten-2 py-4 text-center white--text" cols="12">
-          {{ new Date().getFullYear() }} —
-          <strong>Mostaza</strong>
+    <v-footer padless>
+      <v-row justify="space-between" align="center" no-gutters>
+        <v-col class="black py-4 text-center primary--text" cols="12">
+          © {{ new Date().getFullYear() }} —
+          <strong>
+            Mostaza team made with
+            <v-icon color="red">mdi-heart</v-icon>
+          </strong>
         </v-col>
       </v-row>
     </v-footer>

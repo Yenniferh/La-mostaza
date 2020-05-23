@@ -4,7 +4,13 @@
       <div class="container--gradient"></div>
       <v-row justify="center" class="margin-neg">
         <v-col cols="10" xs="10">
-          <v-data-table :headers="headers" :items="orders" sort-by="client" class="elevation-1">
+          <v-data-table
+            :headers="headers"
+            :items="orders"
+            sort-by="state"
+            sort-desc
+            class="elevation-1"
+          >
             <template v-slot:top>
               <v-toolbar flat color="white">
                 <v-toolbar-title class="text-capitalize">Órdenes</v-toolbar-title>
@@ -70,6 +76,7 @@
                   <v-icon
                     color="primary"
                     small
+                    v-if="item.state != 'FINALIZADO'"
                     class="mr-1"
                     @click="editItem(item)"
                     v-on="on"
@@ -123,14 +130,14 @@ export default {
     editedIndex: -1,
     editedItem: {
       client: "",
-      table: -1,
+      table: 0,
       waiter: "",
       date: "",
       state: ""
     },
     defaultItem: {
       client: "",
-      table: -1,
+      table: 0,
       waiter: "",
       date: "",
       state: ""
