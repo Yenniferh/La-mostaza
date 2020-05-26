@@ -1,11 +1,11 @@
 <template>
   <v-container id="inicio" fluid class="hero--container white--text fill-height mt-4 pa-0">
-    <v-row no-gutters>
+    <v-row no-gutters :class="this.$vuetify.breakpoint.xsOnly && 'py-6'">
       <v-col cols="12" xs="12">
         <v-img
-          :src="require('../../assets/images/chef.jpg')"
+          :src="require('@/assets/images/chef.jpg')"
+          :lazy-src="require('@/assets/images/chef-min.jpg')"
           aspect-ratio="1.7"
-          :lazy-src="require('../../assets/images/chef-min.jpg')"
         >
           <v-container class="hero--gradient fill-height pa-0 ma-0">
             <v-row align="center" class="ml-8" no-gutters>

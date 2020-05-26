@@ -8,6 +8,7 @@
             :headers="headers"
             :items="discounts"
             sort-by="state"
+            calculate-widths
             sort-desc
             class="elevation-1"
           >
@@ -24,7 +25,7 @@
                   </template>
                   <v-card>
                     <v-card-title>
-                      <span class="headline">Agregar</span>
+                      <span class="headline">{{formTitle}}</span>
                     </v-card-title>
 
                     <v-card-text>
@@ -37,10 +38,63 @@
                             <v-text-field v-model="editedItem.description" label="Descripción"></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="editedItem.startDate" label="Fecha de inicio"></v-text-field>
+                            <v-menu
+                              ref="menu2"
+                              v-model="menu2"
+                              :close-on-content-click="false"
+                              :return-value.sync="editedItem.startDate"
+                              transition="scale-transition"
+                              offset-y
+                              min-width="290px"
+                            >
+                              <template v-slot:activator="{ on }">
+                                <v-text-field
+                                  v-model="editedItem.startDate"
+                                  label="Fecha de inicio"
+                                  readonly
+                                  v-on="on"
+                                ></v-text-field>
+                              </template>
+                              <v-date-picker v-model="editedItem.startDate" no-title scrollable>
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="menu2 = false">Cancel</v-btn>
+                                <v-btn
+                                  text
+                                  color="primary"
+                                  @click="$refs.menu2.save(editedItem.startDate)"
+                                >OK</v-btn>
+                              </v-date-picker>
+                            </v-menu>
+                            <!-- <v-text-field v-model="editedItem.startDate" label="Fecha de inicio"></v-text-field> -->
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="editedItem.finishDate" label="Fecha de fin"></v-text-field>
+                            <v-menu
+                              ref="menu"
+                              v-model="menu"
+                              :close-on-content-click="false"
+                              :return-value.sync="editedItem.finishDate"
+                              transition="scale-transition"
+                              offset-y
+                              min-width="290px"
+                            >
+                              <template v-slot:activator="{ on }">
+                                <v-text-field
+                                  v-model="editedItem.finishDate"
+                                  label="Fecha de fin"
+                                  readonly
+                                  v-on="on"
+                                ></v-text-field>
+                              </template>
+                              <v-date-picker v-model="editedItem.finishDate" no-title scrollable>
+                                <v-spacer></v-spacer>
+                                <v-btn text color="primary" @click="menu = false">Cancel</v-btn>
+                                <v-btn
+                                  text
+                                  color="primary"
+                                  @click="$refs.menu.save(editedItem.finishDate)"
+                                >OK</v-btn>
+                              </v-date-picker>
+                            </v-menu>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
                             <v-text-field v-model="editedItem.discount" label="Descuento (%)"></v-text-field>
@@ -62,32 +116,26 @@
               </v-toolbar>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-tooltip top>
+              <v-tooltip v-if="item.state != 'FINALIZADO'" top>
                 <template v-slot:activator="{ on }">
                   <v-icon
                     color="accent"
                     small
-                    v-if="item.state != 'FINALIZADO'"
                     class="mr-1"
                     @click="editItem(item)"
                     v-on="on"
                   >mdi-pencil</v-icon>
                 </template>
-                <span>Generar orden</span>
+                <span>Editar descuento</span>
               </v-tooltip>
-              <v-tooltip top>
+              <v-tooltip v-if="item.state == 'SIN INICIAR'" top>
                 <template v-slot:activator="{ on }">
-                  <v-icon
-                    color="red darken-1"
-                    small
-                    v-if="item.state == 'SIN INICIAR'"
-                    @click="deleteItem(item)"
-                    v-on="on"
-                  >mdi-delete</v-icon>
+                  <v-icon color="red darken-1" small @click="deleteItem(item)" v-on="on">mdi-delete</v-icon>
                 </template>
-                <span>Eliminar orden</span>
+                <span>Eliminar descuento</span>
               </v-tooltip>
             </template>
+            <!-- Row chips -->
             <template v-slot:item.state="{ item }">
               <v-chip
                 :color="getColor(item.state)"
@@ -117,9 +165,9 @@ export default {
         value: "code"
       },
       { text: "Descripción", value: "description" },
-      { text: "Fecha de inicio", value: "startDate" },
-      { text: "Fecha de fin", value: "finishDate" },
-      { text: "Descuento", value: "discount" },
+      { text: "Fecha de inicio", value: "startDate", width: "110" },
+      { text: "Fecha de fin", value: "finishDate", width: "110" },
+      { text: "Descuento (%)", value: "discount" },
       { text: "Estado", value: "state" },
       { text: "Acciones", value: "actions", sortable: false }
     ],
@@ -128,24 +176,26 @@ export default {
     editedItem: {
       code: "",
       description: "",
-      startDate: "",
-      finishDate: "",
+      startDate: new Date().toISOString().substr(0, 10),
+      finishDate: new Date().toISOString().substr(0, 10),
       discount: 0,
       state: ""
     },
     defaultItem: {
       code: "",
       description: "",
-      startDate: "",
-      finishDate: "",
+      startDate: new Date().toISOString().substr(0, 10),
+      finishDate: new Date().toISOString().substr(0, 10),
       discount: 0,
       state: ""
-    }
+    },
+    menu: false,
+    menu2: false
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Agregar" : "Editar";
     }
   },
 
@@ -165,16 +215,16 @@ export default {
         {
           code: "SOPA2020",
           description: "Descuento del 20% por el día del niño",
-          startDate: "25/04/2020",
-          finishDate: "27/04/2020",
+          startDate: "2020-04-25",
+          finishDate: "2020-04-27",
           discount: 20,
           state: "FINALIZADO"
         },
         {
           code: "MADRE3001",
           description: "Descuento del 30% por el día de la madre",
-          startDate: "09/05/2020",
-          finishDate: "16/05/2020",
+          startDate: "2020-05-09",
+          finishDate: "2020-05-16",
           discount: 30,
           state: "FINALIZADO"
         },
@@ -182,24 +232,24 @@ export default {
           code: "SABROSO1025",
           description:
             "En junio disfruta las vacaciones con el 10% de descuento",
-          startDate: "01/06/2020",
-          finishDate: "30/06/2020",
+          startDate: "2020-06-01",
+          finishDate: "2020-06-30",
           discount: 10,
           state: "SIN INICIAR"
         },
         {
           code: "MEQUEDOCASA02",
           description: "5% de descuento en compras durante la cuarentena",
-          startDate: "10/05/2020",
-          finishDate: "01/06/2020",
+          startDate: "2020-05-10",
+          finishDate: "2020-06-01",
           discount: 5,
           state: "VIGENTE"
         },
         {
           code: "ENAMORADOS2334",
           description: "Descuento del 15% para parejas",
-          startDate: "19/05/2020",
-          finishDate: "19/05/2020",
+          startDate: "2020-05-19",
+          finishDate: "2020-05-19",
           discount: 15,
           state: "SIN INICIAR"
         },
@@ -207,32 +257,32 @@ export default {
           code: "HEROESCOL20",
           description:
             "Presenta un documento que demuestre que laboras como profesional de la salud y obten 20% de descuento",
-          startDate: "01/05/2020",
-          finishDate: "31/05/2020",
+          startDate: "2020-05-01",
+          finishDate: "2020-05-31",
           discount: 20,
           state: "VIGENTE"
         },
         {
           code: "CARNAVAL88",
           description: "Descuento del 8% en las compras realizadas en carnaval",
-          startDate: "22/02/2020",
-          finishDate: "25/02/2020",
+          startDate: "2020-02-22",
+          finishDate: "2020-02-25",
           discount: 8,
           state: "FINALIZADO"
         },
         {
           code: "SEMANASANTA33",
           description: "Descuento por semana santa del 30%",
-          startDate: "05/04/2020",
-          finishDate: "11/04/2020",
+          startDate: "2020-04-05",
+          finishDate: "2020-04-11",
           discount: 30,
           state: "FINALIZADO"
         },
         {
           code: "AGOSTO8034",
           description: "Descuentos del 8% en compras realizadas en agosto",
-          startDate: "01/08/2020",
-          finishDate: "31/08/2020",
+          startDate: "2020-08-01",
+          finishDate: "2020-08-31",
           discount: 8,
           state: "SIN INICIAR"
         }

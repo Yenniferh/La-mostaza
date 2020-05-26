@@ -18,19 +18,16 @@
                   </template>
                   <v-card>
                     <v-card-title>
-                      <span class="headline">Agregar</span>
+                      <span class="headline">{{formTitle}}</span>
                     </v-card-title>
 
                     <v-card-text>
                       <v-container>
                         <v-row>
-                          <!-- <v-col cols="12" sm="6" md="4">
-                            <v-text-field v-model="editedItem.name" label="Plato"></v-text-field>
-                          </v-col>-->
-                          <v-col cols="12" sm="6" md="4">
+                          <v-col cols="12" sm="12">
                             <v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
                           </v-col>
-                          <v-col cols="12" sm="6" md="4">
+                          <v-col cols="12" sm="12">
                             <v-text-field v-model="editedItem.description" label="Descripción"></v-text-field>
                           </v-col>
                           <v-col cols="12" sm="6" md="4">
@@ -56,8 +53,24 @@
               </v-toolbar>
             </template>
             <template v-slot:item.actions="{ item }">
-              <v-icon small class="mr-2" @click="editItem(item)">mdi-pencil</v-icon>
-              <v-icon small @click="deleteItem(item)">mdi-delete</v-icon>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon
+                    color="accent"
+                    small
+                    class="mr-1"
+                    @click="editItem(item)"
+                    v-on="on"
+                  >mdi-pencil</v-icon>
+                </template>
+                <span>Editar producto</span>
+              </v-tooltip>
+              <v-tooltip top>
+                <template v-slot:activator="{ on }">
+                  <v-icon color="red darken-1" small @click="deleteItem(item)" v-on="on">mdi-delete</v-icon>
+                </template>
+                <span>Eliminar producto</span>
+              </v-tooltip>
             </template>
             <template v-slot:no-data>
               <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -105,7 +118,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
+      return this.editedIndex === -1 ? "Agregar" : "Editar";
     }
   },
 

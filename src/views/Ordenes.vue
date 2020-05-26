@@ -71,12 +71,11 @@
                 </template>
                 <span>Ver orden</span>
               </v-tooltip>
-              <v-tooltip top>
+              <v-tooltip v-if="item.state != 'FINALIZADO'" top>
                 <template v-slot:activator="{ on }">
                   <v-icon
                     color="primary"
                     small
-                    v-if="item.state != 'FINALIZADO'"
                     class="mr-1"
                     @click="editItem(item)"
                     v-on="on"
@@ -84,15 +83,9 @@
                 </template>
                 <span>Generar orden</span>
               </v-tooltip>
-              <v-tooltip top>
+              <v-tooltip v-if="item.state != 'FINALIZADO'" top>
                 <template v-slot:activator="{ on }">
-                  <v-icon
-                    color="red darken-1"
-                    small
-                    v-if="item.state != 'FINALIZADO'"
-                    @click="deleteItem(item)"
-                    v-on="on"
-                  >mdi-delete</v-icon>
+                  <v-icon color="red darken-1" small @click="deleteItem(item)" v-on="on">mdi-delete</v-icon>
                 </template>
                 <span>Eliminar orden</span>
               </v-tooltip>

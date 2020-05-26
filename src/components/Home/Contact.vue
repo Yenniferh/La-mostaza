@@ -9,7 +9,7 @@
           height="95%"
         />
       </v-col>
-      <v-col cols="12" xs="12" sm="6">
+      <v-col cols="12" xs="12" sm="6" :class="this.$vuetify.breakpoint.xsOnly && 'mt-3'">
         <h2 class="display-2 primary--text text-capitalize text-justify">¡Contáctanos!</h2>
 
         <h3 class="title mt-3">
