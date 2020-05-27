@@ -5,9 +5,15 @@
         <v-card elevation="3" max-width="400" color="white">
           <v-card-title>
             <div class="d-flex flex-column">
-              <v-icon class="my-3" color="black" size="80">mdi-account-tie</v-icon>
-              <h1 class="headline text-uppercase text-center">Iniciar sesión empleado</h1>
-              <p class="subtitle-1 text-center d-inline-block">Por favor ingresa tus datos.</p>
+              <v-icon class="my-3" color="black" size="80"
+                >mdi-account-tie</v-icon
+              >
+              <h1 class="headline text-uppercase text-center">
+                Iniciar sesión empleado
+              </h1>
+              <p class="subtitle-1 text-center d-inline-block">
+                Por favor ingresa tus datos.
+              </p>
             </div>
           </v-card-title>
           <v-card-text>
@@ -29,7 +35,13 @@
                 solo
                 required
               />
-              <v-btn color="primary" type="submit" @click="login($event)" block>Iniciar sesión</v-btn>
+              <v-btn
+                color="primary"
+                type="submit"
+                @click.prevent="login()"
+                block
+                >Iniciar sesión</v-btn
+              >
             </v-form>
           </v-card-text>
         </v-card>
@@ -39,29 +51,31 @@
 </template>
 
 <script>
+import api from '@/services/api.js';
 export default {
-  name: "Register",
+  name: 'Register',
   data: () => ({
     valid: false,
-    email: "",
+    email: '',
     emailRules: [
-      v => !!v || "E-mail is required",
-      v => /.+@.+\..+/.test(v) || "E-mail must be valid"
+      (v) => !!v || 'E-mail is required',
+      (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
     ],
-    password: "",
-    passwordRules: [v => !!v || "Password is required"]
+    password: '',
+    passwordRules: [(v) => !!v || 'Password is required'],
   }),
   methods: {
-    async login(e) {
-      e.preventDefault();
+    async login() {
       this.$refs.form.validate();
       if (this.valid) {
-        setTimeout(() => {
+        api.login('wx@wx.com', '123456').then((res) => console.log(res));
+        //api.getAssets().then((res) => console.log(res));
+        /*         setTimeout(() => {
           alert(`email: ${this.email} pass: ${this.password}`);
           this.$router.push("/admin/dashboard");
-        }, [4000]);
+        }, [4000]); */
       }
-    }
-  }
+    },
+  },
 };
 </script>

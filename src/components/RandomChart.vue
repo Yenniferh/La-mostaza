@@ -1,32 +1,14 @@
 <template>
-  <v-row no-gutters>
-    <v-col cols="12" xs="12">
-      <div class="container--gradient"></div>
-      <v-row justify="center" class="margin-neg">
-        <v-col cols="10" xs="12">
-          <v-row>
-            <v-card max-width="500" elevation="2">
-              <v-card-text>
-                <bar-chart :chart-data="datacollection" :options="options"></bar-chart>
-                <button @click="fillData()">Randomize</button>
-              </v-card-text>
-            </v-card>
-          </v-row>
-          <v-row>
-            <!-- <v-card max-width="500" elevation="2">
-            <v-card-text>
-              <bar-chart
-                :chart-data="datacollection"
-                :options="options"
-              ></bar-chart>
-              <button @click="fillData()">Randomize</button>
-            </v-card-text>
-            </v-card>-->
-          </v-row>
-        </v-col>
-      </v-row>
-    </v-col>
-  </v-row>
+  <v-col cols="10" xs="12">
+    <v-row>
+      <v-card max-width="500" elevation="2">
+        <v-card-text>
+          <bar-chart :chart-data="datacollection" :options="options"></bar-chart>
+          <button @click="fillData()">Randomize</button>
+        </v-card-text>
+      </v-card>
+    </v-row>
+  </v-col>
 </template>
 
 <script>

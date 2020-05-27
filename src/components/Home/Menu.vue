@@ -1,14 +1,22 @@
-  <template>
+<template>
   <v-item-group multiple id="menu" class="grey lighten-5">
     <v-container>
       <v-row>
-        <h2 class="display-2 primary--text text-capitalize my-4">Nuestra oferta gastronómica</h2>
+        <h2 class="display-2 primary--text text-capitalize my-4">
+          Nuestra oferta gastronómica
+        </h2>
       </v-row>
       <v-item-group>
         <v-container fluid>
           <v-col cols="12">
-            <v-row :justify="this.$vuetify.breakpoint.xsOnly ? 'center': 'start'">
-              <v-item v-for="n in 9" :key="n" v-slot:default="{ active, toggle }">
+            <v-row
+              :justify="this.$vuetify.breakpoint.xsOnly ? 'center' : 'start'"
+            >
+              <v-item
+                v-for="n in 9"
+                :key="n"
+                v-slot:default="{ active, toggle }"
+              >
                 <v-card
                   :color="active ? 'primary' : ''"
                   class="d-flex align-center justify-center ma-2"
@@ -27,7 +35,9 @@
                     <v-container fluid>
                       <v-row>
                         <v-col cols="12" xs="12">
-                          <v-icon color="white">mdi-silverware-fork-knife</v-icon>
+                          <v-icon color="white"
+                            >mdi-silverware-fork-knife</v-icon
+                          >
                           <span class="body-1 white--text ml-2">Postre</span>
                         </v-col>
                       </v-row>
@@ -35,13 +45,15 @@
                       <v-row>
                         <v-col cols="12" xs="12" class="mt-10">
                           <h3 class="title white--text">Mousse</h3>
-                          <p
-                            class="white--text font-weight-thin"
-                          >Delicioso postre de chocolate amargo y frutos rojos</p>
+                          <p class="white--text font-weight-thin">
+                            Delicioso postre de chocolate amargo y frutos rojos
+                          </p>
                         </v-col>
                       </v-row>
                       <v-row justify="end">
-                        <v-chip color="primary mr-2 font-weight-bold" small>$7.500</v-chip>
+                        <v-chip color="primary mr-2 font-weight-bold" small
+                          >$7.500</v-chip
+                        >
                       </v-row>
                     </v-container>
                   </v-img>
@@ -54,3 +66,25 @@
     </v-container>
   </v-item-group>
 </template>
+
+<script>
+import api from '@/services/api';
+export default {
+  data: () => ({
+    platos: [],
+    plato: {
+      desc: '',
+      cat: '',
+      tiempo: 0,
+      imgUrl: '',
+      precio: '',
+      name: '',
+    },
+  }),
+  created() {
+    api.getPlatos().then((platos) => {
+      console.log(platos);
+    });
+  },
+};
+</script>

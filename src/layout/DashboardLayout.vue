@@ -58,7 +58,14 @@
     </v-container>
 
     <v-content>
-      <router-view />
+      <v-row no-gutters>
+        <v-col cols="12" xs="12">
+          <div class="container--gradient"></div>
+          <v-row justify="center" class="margin-neg">
+            <router-view />
+          </v-row>
+        </v-col>
+      </v-row>
     </v-content>
 
     <v-footer v-if="!this.$vuetify.breakpoint.smAndUp" app padless>
