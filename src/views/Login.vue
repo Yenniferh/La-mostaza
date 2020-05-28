@@ -54,6 +54,7 @@
           v-else
           indeterminate
           color="primary"
+          size="80"
         ></v-progress-circular>
       </v-row>
     </v-col>
@@ -62,7 +63,7 @@
 
 <script>
 import api from '@/services/api.js';
-import { mapState /* mapMutations */ } from 'vuex';
+import { mapState } from 'vuex';
 export default {
   name: 'Register',
   data: () => ({
@@ -77,8 +78,6 @@ export default {
   }),
   computed: mapState(['isLoading']),
   methods: {
-    //...mapMutations(['setLoginVariables']),
-
     toggleLoading() {
       this.$store.commit('toggleLoading');
     },
@@ -101,13 +100,6 @@ export default {
           this.toggleLoading();
           this.$router.push('/admin/dashboard');
         });
-        //api.getAssets().then((res) => console.log(res));
-        /*         setTimeout(() => {
-          alert(`email: ${this.email} pass: ${this.password}`);
-          this.$router.push("/admin/dashboard");
-        }, [4000]); */
-
-        //api.login2();
       }
     },
   },

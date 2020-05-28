@@ -2,6 +2,7 @@ import Vue from 'vue';
 import VueRouter from 'vue-router';
 import HomeLayout from '../layout/HomeLayout.vue';
 import DashboardLayout from '../layout/DashboardLayout.vue';
+import store from '@/store/index.js';
 
 Vue.use(VueRouter);
 
@@ -31,6 +32,11 @@ const routes = [
     path: '/admin',
     redirect: '/admin/dashboard',
     component: DashboardLayout,
+    beforeEnter: (to, from, next) => {
+      if (to.name !== 'Login' && !store.state.user.isLoggued)
+        next({ name: 'Home' });
+      else next();
+    },
     children: [
       {
         path: '/admin/dashboard',

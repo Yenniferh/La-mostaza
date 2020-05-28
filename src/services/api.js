@@ -29,24 +29,8 @@ function getStock() {
     .catch((err) => console.log(err));
 }
 
-function login2() {
-  var data = { email: 'me@me.com', password: '123456' };
-
-  fetch(`${url}/login`, {
-    method: 'POST', // or 'PUT'
-    body: JSON.stringify(data), // data can be `string` or {object}!
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-    .then((res) => res.json())
-    .catch((error) => console.error('Error:', error))
-    .then((response) => console.log('Success:', response));
-}
-
 export default {
   login,
   getPlatos,
   getStock,
-  login2,
 };

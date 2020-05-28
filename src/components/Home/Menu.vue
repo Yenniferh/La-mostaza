@@ -9,25 +9,28 @@
       <v-item-group>
         <v-container fluid>
           <v-col cols="12">
+            <v-row v-if="this.$store.state.isLoading" justify="center">
+              <v-progress-circular
+                indeterminate
+                color="primary"
+                class="my-5"
+                size="60"
+              ></v-progress-circular>
+            </v-row>
             <v-row
               :justify="this.$vuetify.breakpoint.xsOnly ? 'center' : 'start'"
+              v-else
             >
-              <v-item
-                v-for="n in 9"
-                :key="n"
-                v-slot:default="{ active, toggle }"
-              >
+              <v-item v-for="dish in platos" :key="dish.id">
                 <v-card
-                  :color="active ? 'primary' : ''"
                   class="d-flex align-center justify-center ma-2"
                   dark
                   elevation="3"
                   height="280"
                   width="240"
-                  @click="toggle"
                 >
                   <v-img
-                    src="https://images.pexels.com/photos/1028714/pexels-photo-1028714.jpeg?cs=srgb&dl=azucar-bombon-ceramico-chocolate-1028714.jpg&fm=jpg"
+                    :src="dish.imageUrl"
                     height="100%"
                     width="100%"
                     gradient="to top left, rgba(0,0,0,.33), rgba(0,0,0,.4)"
@@ -38,21 +41,26 @@
                           <v-icon color="white"
                             >mdi-silverware-fork-knife</v-icon
                           >
-                          <span class="body-1 white--text ml-2">Postre</span>
+                          <span
+                            class="body-1 white--text ml-2 text-capitalize"
+                            >{{ dish.cat }}</span
+                          >
                         </v-col>
                       </v-row>
                       <v-spacer />
                       <v-row>
                         <v-col cols="12" xs="12" class="mt-10">
-                          <h3 class="title white--text">Mousse</h3>
+                          <h3 class="title white--text text-capitalize">
+                            {{ dish.name }}
+                          </h3>
                           <p class="white--text font-weight-thin">
-                            Delicioso postre de chocolate amargo y frutos rojos
+                            {{ dish.desc }}
                           </p>
                         </v-col>
                       </v-row>
                       <v-row justify="end">
                         <v-chip color="primary mr-2 font-weight-bold" small
-                          >$7.500</v-chip
+                          >${{ dish.precio }}</v-chip
                         >
                       </v-row>
                     </v-container>
@@ -69,23 +77,51 @@
 
 <script>
 import api from '@/services/api';
+import { mapState } from 'vuex';
+
 export default {
   data: () => ({
     platos: [],
-    plato: {
-      desc: '',
-      cat: '',
-      tiempo: 0,
-      imgUrl: '',
-      precio: '',
-      name: '',
-    },
   }),
   created() {
+    this.toggleLoading();
     api.getPlatos().then((platos) => {
-      console.log(platos);
+      const pl = Object.entries(platos);
+      console.log(pl);
+      for (let i = 0; i < pl.length; i++) {
+        let plato = pl[i][1];
+        let map = new Map(Object.entries(plato));
+        let newPlato = {
+          id: pl[i][0],
+          desc: map.get('desc'),
+          cat: map.get('cat'),
+          tiempo: map.get('tiempo'),
+          imageUrl: map.get('imageUrl'),
+          precio: map.get('precio'),
+          name: map.get('name'),
+        };
+        this.platos.push(newPlato);
+      }
+      this.setDishes({ dishes: this.platos });
+      this.toggleLoading();
     });
-    api.getStock().then((inv) => console.log(inv));
+  },
+  computed: mapState(['isLoading']),
+  methods: {
+    restartLoading() {
+      this.$store.commit('restartLoading');
+    },
+
+    toggleLoading() {
+      this.$store.commit('toggleLoading');
+    },
+
+    setDishes(payload) {
+      this.$store.commit('setDishes', payload);
+    },
+  },
+  beforeDestroy() {
+    this.restartLoading();
   },
 };
 </script>

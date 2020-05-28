@@ -12,15 +12,20 @@ export default new Vuex.Store({
       type: 0,
     },
     isLoading: false,
-    dishes: [], //Platos
+    dishes: [],
     orders: [],
     discounts: [],
     stock: [],
   },
   mutations: {
+    restartLoading(state) {
+      state.isLoading = false;
+    },
+
     toggleLoading(state) {
       state.isLoading = !state.isLoading;
     },
+
     setLoginVariables(state, payload = {}) {
       payload.token
         ? (state.user.token = payload.token)
@@ -31,11 +36,16 @@ export default new Vuex.Store({
       payload.type ? (state.user.type = payload.type) : (state.user.type = 2);
       state.user.isLoggued = true;
     },
+
     Logout(state) {
       state.user.token = '';
       state.user.email = '';
       state.user.type = 0;
       state.user.isLoggued = false;
+    },
+
+    setDishes(state, payload = {}) {
+      payload.dishes && (state.dishes = payload.dishes);
     },
   },
   actions: {},
