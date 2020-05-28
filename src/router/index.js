@@ -30,19 +30,14 @@ const routes = [
   },
   {
     path: '/admin',
-    redirect: '/admin/dashboard',
+    redirect: '/admin/menu',
     component: DashboardLayout,
     beforeEnter: (to, from, next) => {
-      if (to.name !== 'Login' && !store.state.user.isLoggued)
+      if (to.name === 'Login' && !store.state.user.isLoggued)
         next({ name: 'Home' });
       else next();
     },
     children: [
-      {
-        path: '/admin/dashboard',
-        name: 'Dashboard',
-        component: () => import('../views/Dashboard.vue'),
-      },
       {
         path: '/admin/menu',
         name: 'Menu',
@@ -62,6 +57,16 @@ const routes = [
         path: '/admin/descuentos',
         name: 'Descuentos',
         component: () => import('../views/Descuentos.vue'),
+      },
+      {
+        path: '/admin/adduser',
+        name: 'AddUser',
+        beforeEnter: (to, from, next) => {
+          if (from.name !== '/admin/*' && !store.state.user.type === 2)
+            next({ name: '/admin/menu' });
+          else next();
+        },
+        component: () => import('../views/Adduser.vue'),
       },
     ],
   },

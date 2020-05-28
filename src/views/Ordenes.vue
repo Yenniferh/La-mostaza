@@ -14,32 +14,6 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-icon
-              color="accent"
-              small
-              class="mr-1"
-              @click="editItem(item)"
-              v-on="on"
-              >mdi-eye</v-icon
-            >
-          </template>
-          <span>Ver orden</span>
-        </v-tooltip>
-        <v-tooltip v-if="item.state != 'FINALIZADO'" top>
-          <template v-slot:activator="{ on }">
-            <v-icon
-              color="primary"
-              small
-              class="mr-1"
-              @click="editItem(item)"
-              v-on="on"
-              >mdi-file-document</v-icon
-            >
-          </template>
-          <span>Generar orden</span>
-        </v-tooltip>
         <v-tooltip v-if="item.state != 'FINALIZADO'" top>
           <template v-slot:activator="{ on }">
             <v-icon
@@ -64,7 +38,6 @@
 
 <script>
 import api from '@/services/api';
-//import { mapState } from 'vuex';
 export default {
   data: () => ({
     dialog: false,
@@ -90,6 +63,9 @@ export default {
       nmesa: '',
       idmesero: '',
       fecha: '',
+      year: '',
+      mes: '',
+      dia: '',
       hora: '',
       nfactura: '',
       total: '',
@@ -99,7 +75,6 @@ export default {
 
   created() {
     this.create();
-    //this.initialize();
   },
 
   methods: {
@@ -116,6 +91,9 @@ export default {
             nmesa: map.get('nmesa'),
             idmesero: map.get('idmesero'),
             fecha: `${map.get('year')}-${map.get('mes')}-${map.get('dia')}`,
+            year: map.get('year'),
+            mes: map.get('mes'),
+            dia: map.get('dia'),
             hora: map.get('hora'),
             nfactura: map.get('nfactura'),
             total: map.get('total'),
@@ -141,9 +119,10 @@ export default {
     },
 
     deleteItem(item) {
-      const index = this.orders.indexOf(item);
-      confirm('Are you sure you want to delete this item?') &&
-        this.orders.splice(index, 1);
+      api.deleteOrder(item.id, item.year, item.mes).then(() => {
+        const index = this.orders.indexOf(item);
+        this.setOrders({ orders: this.orders.splice(index, 1) });
+      });
     },
 
     getColor(state) {

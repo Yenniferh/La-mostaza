@@ -21,108 +21,54 @@
             </template>
             <v-card>
               <v-card-title>
-                <span class="headline">{{ formTitle }}</span>
+                <span class="headline">Agregar descuento</span>
               </v-card-title>
 
               <v-card-text>
                 <v-container>
                   <v-row>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6">
                       <v-text-field
-                        v-model="editedItem.code"
-                        label="Código"
+                        v-model="createdItem.dct"
+                        label="Descuento (%)"
                       ></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.description"
-                        label="Descripción"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-menu
-                        ref="menu2"
-                        v-model="menu2"
-                        :close-on-content-click="false"
-                        :return-value.sync="editedItem.startDate"
-                        transition="scale-transition"
-                        offset-y
-                        min-width="290px"
-                      >
-                        <template v-slot:activator="{ on }">
-                          <v-text-field
-                            v-model="editedItem.startDate"
-                            label="Fecha de inicio"
-                            readonly
-                            v-on="on"
-                          ></v-text-field>
-                        </template>
-                        <v-date-picker
-                          v-model="editedItem.startDate"
-                          no-title
-                          scrollable
-                        >
-                          <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="menu2 = false"
-                            >Cancel</v-btn
-                          >
-                          <v-btn
-                            text
-                            color="primary"
-                            @click="$refs.menu2.save(editedItem.startDate)"
-                            >OK</v-btn
-                          >
-                        </v-date-picker>
-                      </v-menu>
-                      <!-- <v-text-field v-model="editedItem.startDate" label="Fecha de inicio"></v-text-field> -->
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
+                    <v-col cols="12" sm="6">
                       <v-menu
                         ref="menu"
                         v-model="menu"
                         :close-on-content-click="false"
-                        :return-value.sync="editedItem.finishDate"
+                        :return-value.sync="createdItem.date"
                         transition="scale-transition"
                         offset-y
                         min-width="290px"
                       >
                         <template v-slot:activator="{ on }">
                           <v-text-field
-                            v-model="editedItem.finishDate"
+                            v-model="createdItem.date"
                             label="Fecha de fin"
                             readonly
                             v-on="on"
                           ></v-text-field>
                         </template>
                         <v-date-picker
-                          v-model="editedItem.finishDate"
+                          v-model="createdItem.date"
                           no-title
                           scrollable
+                          type="month"
                         >
                           <v-spacer></v-spacer>
-                          <v-btn text color="primary" @click="menu = false"
+                          <v-btn text color="red darken-1" @click="menu = false"
                             >Cancel</v-btn
                           >
                           <v-btn
                             text
                             color="primary"
-                            @click="$refs.menu.save(editedItem.finishDate)"
+                            @click="$refs.menu.save(createdItem.date)"
                             >OK</v-btn
                           >
                         </v-date-picker>
                       </v-menu>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.discount"
-                        label="Descuento (%)"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.state"
-                        label="Estado"
-                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -138,20 +84,7 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-tooltip v-if="item.state != 'FINALIZADO'" top>
-          <template v-slot:activator="{ on }">
-            <v-icon
-              color="accent"
-              small
-              class="mr-1"
-              @click="editItem(item)"
-              v-on="on"
-              >mdi-pencil</v-icon
-            >
-          </template>
-          <span>Editar descuento</span>
-        </v-tooltip>
-        <v-tooltip v-if="item.state == 'SIN INICIAR'" top>
+        <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-icon
               color="red darken-1"
@@ -163,16 +96,6 @@
           </template>
           <span>Eliminar descuento</span>
         </v-tooltip>
-      </template>
-      <!-- Row chips -->
-      <template v-slot:item.state="{ item }">
-        <v-chip
-          :color="getColor(item.state)"
-          :outlined="item.state != 'VIGENTE'"
-          dark
-          small
-          >{{ item.state }}</v-chip
-        >
       </template>
     </v-data-table>
   </v-col>
@@ -190,31 +113,28 @@ export default {
         value: 'id',
         sortable: false,
       },
-      { text: 'Código', value: 'code' },
+      { text: 'Código', value: 'code', sortable: false },
       { text: 'Descuento', value: 'dct' },
-      { text: 'Acciones', value: 'actions', sortable: false },
+      { text: 'Mes', value: 'mes' },
+      { text: 'Año', value: 'year' },
+      { text: 'Acciones', value: 'actions', sortable: false, align: 'center' },
     ],
     discounts: [],
     editedIndex: -1,
-    editedItem: {
-      id: '',
+    createdItem: {
       dct: '',
-      code: '',
+      date: '',
     },
     defaultItem: {
       id: '',
       dct: '',
+      year: '',
+      mes: '',
       code: '',
     },
     menu: false,
     menu2: false,
   }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'Agregar' : 'Editar';
-    },
-  },
 
   watch: {
     dialog(val) {
@@ -231,6 +151,7 @@ export default {
       this.toggleLoading();
       api.getDescuentos().then((discounts) => {
         const dis = Object.entries(discounts);
+        console.log(discounts);
         for (let i = 0; i < dis.length; i++) {
           let disc = dis[i][1];
           let map = new Map(Object.entries(disc));
@@ -238,6 +159,8 @@ export default {
             id: dis[i][0],
             dct: map.get('dct'),
             code: map.get('code'),
+            year: map.get('year'),
+            mes: map.get('mes'),
           };
           this.discounts.push(newDisc);
         }
@@ -260,36 +183,39 @@ export default {
 
     editItem(item) {
       this.editedIndex = this.discounts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
+      this.createdItem = Object.assign({}, item);
       this.dialog = true;
     },
 
     deleteItem(item) {
-      const index = this.discounts.indexOf(item);
-      confirm('Are you sure you want to delete this item?') &&
-        this.discounts.splice(index, 1);
+      api.deleteDescuento(item.id, item.year, item.mes).then(() => {
+        const index = this.discounts.indexOf(item);
+        this.setDiscounts({ discounts: this.discounts.splice(index, 1) });
+      });
     },
 
     close() {
       this.dialog = false;
       this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
+        this.createdItem = Object.assign({}, this.defaultItem);
         this.editedIndex = -1;
       });
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.discounts[this.editedIndex], this.editedItem);
-      } else {
-        this.discounts.push(this.editedItem);
-      }
-      this.close();
-    },
-    getColor(state) {
-      if (state === 'VIGENTE') return 'green';
-      else if (state === 'SIN INICIAR') return 'primary';
-      else return 'accent';
+      api
+        .createDescuento(
+          this.createdItem.dct,
+          this.createdItem.date.split('-')[1],
+          this.createdItem.date.split('-')[0]
+        )
+        .then((res) => {
+          if (res.status == 200) {
+            this.discounts = [];
+            this.create();
+          }
+          this.close();
+        });
     },
   },
 };

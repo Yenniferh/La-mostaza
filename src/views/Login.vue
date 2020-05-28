@@ -58,6 +58,12 @@
         ></v-progress-circular>
       </v-row>
     </v-col>
+    <v-snackbar v-model="snackbar.toggle">
+      {{ snackbar.text }}
+      <v-btn color="pink" text @click="snackbar.toggle = false">
+        Close
+      </v-btn>
+    </v-snackbar>
   </v-container>
 </template>
 
@@ -75,6 +81,10 @@ export default {
     ],
     password: '',
     passwordRules: [(v) => !!v || 'Password is required'],
+    snackbar: {
+      toggle: false,
+      text: '',
+    },
   }),
   computed: mapState(['isLoading']),
   methods: {
@@ -91,14 +101,22 @@ export default {
       if (this.valid) {
         this.toggleLoading();
         api.login(this.email, this.password).then((res) => {
-          console.log(res);
-          this.setLoginVariables({
-            email: res['email'],
-            type: res['tipo'],
-            token: res['token'],
-          });
-          this.toggleLoading();
-          this.$router.push('/admin/dashboard');
+          if (res.tipo > 0) {
+            this.setLoginVariables({
+              email: res['email'],
+              type: res['tipo'],
+              token: res['token'],
+            });
+            this.$router.push('/admin/menu');
+          } else if (res.tipo === 0) {
+            this.toggleLoading();
+            this.snackbar.text = 'Acceso denegado: No tiene permisos ';
+            this.snackbar.toggle = true;
+          } else {
+            this.toggleLoading();
+            this.snackbar.text = 'Revise su email y/o contraseña';
+            this.snackbar.toggle = true;
+          }
         });
       }
     },

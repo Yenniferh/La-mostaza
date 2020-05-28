@@ -59,9 +59,47 @@
           >
         </v-toolbar-title>
         <v-spacer />
-        <router-link to="/home">
-          <v-btn color="primary" @click="Logout" small>Cerrar sesión</v-btn>
-        </router-link>
+        <span class="mx-2 accent-text darken-2">{{
+          this.$store.state.user.type === 2 ? 'ADMIN' : 'MESERO'
+        }}</span>
+        <v-menu bottom origin="center center" transition="scale-transition">
+          <template v-slot:activator="{ on }">
+            <v-icon color="primary" v-on="on"
+              >mdi-arrow-down-drop-circle</v-icon
+            >
+          </template>
+
+          <v-list>
+            <router-link
+              v-if="this.$store.state.user.type === 2"
+              to="/admin/adduser"
+              class="my-2 text-dec"
+            >
+              <v-list-item>
+                <v-list-item-icon class="mr-2"
+                  ><v-icon color="accent darken-2"
+                    >mdi-account-plus</v-icon
+                  ></v-list-item-icon
+                >
+                <v-list-item-title class="accent--text text--darken-2">
+                  Añadir Usuario</v-list-item-title
+                >
+              </v-list-item>
+            </router-link>
+            <router-link to="/home" @click="Logout">
+              <v-list-item class="primary">
+                <v-list-item-icon class="mr-2"
+                  ><v-icon color="white"
+                    >mdi-logout-variant</v-icon
+                  ></v-list-item-icon
+                >
+                <v-list-item-title class="white--text font-weight-bold"
+                  >Cerrar Sesión</v-list-item-title
+                >
+              </v-list-item>
+            </router-link>
+          </v-list>
+        </v-menu>
       </v-app-bar>
     </v-container>
 
@@ -98,11 +136,6 @@ import { mapMutations } from 'vuex';
 export default {
   data: () => ({
     items: [
-      {
-        icon: 'mdi-finance',
-        label: 'Balance',
-        path: startPath + '/dashboard',
-      },
       {
         icon: 'mdi-silverware',
         label: 'Menú',

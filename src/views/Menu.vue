@@ -1,16 +1,9 @@
 <template>
   <v-col cols="10" xs="10">
-    <v-data-table
-      :headers="headers"
-      :items="platos"
-      sort-by="name "
-      class="elevation-1"
-    >
+    <v-data-table :headers="headers" :items="platos" sort-by="name " class="elevation-1">
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title class="text-capitalize"
-            >Platos del Menú</v-toolbar-title
-          >
+          <v-toolbar-title class="text-capitalize">Platos del Menú</v-toolbar-title>
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
@@ -28,33 +21,28 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="12">
-                      <v-text-field
-                        v-model="editedItem.name"
-                        label="Nombre"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="12">
-                      <v-text-field
-                        v-model="editedItem.description"
-                        label="Descripción"
-                      ></v-text-field>
+                      <v-text-field v-model="editedItem.desc" label="Descripción"></v-text-field>
                     </v-col>
-                    <v-col cols="12" sm="6">
-                      <v-select
-                        :items="selectOptions"
-                        label="Categoría"
-                        v-model="editedItem.category"
-                      ></v-select>
+                    <v-col cols="12" sm="4">
+                      <v-select :items="selectOptions" label="Categoría" v-model="editedItem.cat"></v-select>
                     </v-col>
-                    <v-col cols="12" sm="6">
-                      <v-text-field
-                        v-model="editedItem.price"
-                        label="Precio"
-                      ></v-text-field>
+                    <v-col cols="12" sm="4">
+                      <v-text-field v-model="editedItem.precio" label="Precio"></v-text-field>
                     </v-col>
-                    <!-- <v-col cols="12" sm="6" md="4">
-                          <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                    </v-col>-->
+                    <v-col cols="12" sm="4">
+                      <v-text-field v-model="editedItem.tiempo" label="Tiempo de prep."></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-file-input
+                        v-model="image"
+                        accept="image/*"
+                        placeholder="Selecciona la foto del plato"
+                        label="Imagen plato"
+                      ></v-file-input>
+                    </v-col>
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -71,26 +59,7 @@
       <template v-slot:item.actions="{ item }">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-icon
-              color="accent"
-              small
-              class="mr-1"
-              @click="editItem(item)"
-              v-on="on"
-              >mdi-pencil</v-icon
-            >
-          </template>
-          <span>Editar plato</span>
-        </v-tooltip>
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-icon
-              color="red darken-1"
-              small
-              @click="deleteItem(item)"
-              v-on="on"
-              >mdi-delete</v-icon
-            >
+            <v-icon color="red darken-1" small @click="deleteItem(item)" v-on="on">mdi-delete</v-icon>
           </template>
           <span>Eliminar plato</span>
         </v-tooltip>
@@ -100,58 +69,51 @@
 </template>
 
 <script>
-import api from '@/services/api';
+import api from "@/services/api";
 
 export default {
-  name: 'Menu',
+  name: "Menu",
   data: () => ({
     dialog: false,
     headers: [
       {
-        text: 'Nombre',
-        align: 'start',
-        sortable: false,
-        value: 'name',
+        text: "Nombre",
+        align: "start",
+        value: "name"
       },
-      { text: 'Descripción', value: 'desc', sortable: false },
-      { text: 'Categoría', value: 'cat' },
-      { text: 'Precio', value: 'precio' },
-      { text: 'Imagen', value: 'imageUrl' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: "Descripción", value: "desc", sortable: false },
+      { text: "Categoría", value: "cat" },
+      { text: "Precio", value: "precio" },
+      { text: "Actions", value: "actions", sortable: false, align: "center" }
     ],
     platos: [],
     editedIndex: -1,
     editedItem: {
-      id: '',
-      desc: '',
-      cat: '',
-      tiempo: '',
-      imageUrl: '',
-      precio: '',
-      name: '',
+      id: "",
+      desc: "",
+      cat: "",
+      tiempo: "",
+      imageUrl: "",
+      precio: "",
+      name: ""
     },
     defaultItem: {
-      id: '',
-      desc: '',
-      cat: '',
-      tiempo: '',
-      imageUrl: '',
-      precio: '',
-      name: '',
+      id: "",
+      desc: "",
+      cat: "",
+      tiempo: "",
+      imageUrl: "",
+      precio: "",
+      name: ""
     },
-    selectOptions: ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Otro'],
+    image: [],
+    selectOptions: ["Desayuno", "Almuerzo", "Cena", "Postre", "Otro"]
   }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
-    },
-  },
 
   watch: {
     dialog(val) {
       val || this.close();
-    },
+    }
   },
 
   created() {
@@ -161,7 +123,7 @@ export default {
   methods: {
     create() {
       this.toggleLoading();
-      api.getPlatos().then((platos) => {
+      api.getPlatos().then(platos => {
         const pl = Object.entries(platos);
         console.log(pl);
         for (let i = 0; i < pl.length; i++) {
@@ -169,12 +131,12 @@ export default {
           let map = new Map(Object.entries(plato));
           let newPlato = {
             id: pl[i][0],
-            desc: map.get('desc'),
-            cat: map.get('cat'),
-            tiempo: map.get('tiempo'),
-            imageUrl: map.get('imageUrl'),
-            precio: map.get('precio'),
-            name: map.get('name'),
+            desc: map.get("desc"),
+            cat: map.get("cat"),
+            tiempo: map.get("tiempo"),
+            imageUrl: map.get("imageUrl"),
+            precio: map.get("precio"),
+            name: map.get("name")
           };
           this.platos.push(newPlato);
         }
@@ -184,27 +146,24 @@ export default {
     },
 
     restartLoading() {
-      this.$store.commit('restartLoading');
+      this.$store.commit("restartLoading");
     },
 
     toggleLoading() {
-      this.$store.commit('toggleLoading');
+      this.$store.commit("toggleLoading");
     },
 
     setDishes(payload) {
-      this.$store.commit('setDishes', payload);
-    },
-
-    editItem(item) {
-      this.editedIndex = this.desserts.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+      this.$store.commit("setDishes", payload);
     },
 
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
-      confirm('Are you sure you want to delete this item?') &&
-        this.desserts.splice(index, 1);
+      api.deletePlato(item.id).then(res => {
+        if (res.status === 200) {
+          const index = this.platos.indexOf(item);
+          this.setDishes({ dishes: this.platos.splice(index, 1) });
+        }
+      });
     },
 
     close() {
@@ -216,16 +175,18 @@ export default {
     },
 
     save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.desserts[this.editedIndex], this.editedItem);
-      } else {
-        this.desserts.push(this.editedItem);
-      }
-      this.close();
-    },
-  },
-  beforeDestroy() {
-    this.restartLoading();
-  },
+      this.toggleLoading();
+      const { name, desc, cat, precio, tiempo } = this.editedItem;
+      api.createPlato(name, desc, cat, precio, tiempo, this.image).then(res => {
+        if (res.status == 200) {
+          this.platos = [];
+          this.create();
+          this.image = [];
+        }
+        this.close();
+        this.toggleLoading();
+      });
+    }
+  }
 };
 </script>
