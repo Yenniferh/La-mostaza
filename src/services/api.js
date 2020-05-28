@@ -13,6 +13,7 @@ function login(email, pass) {
     .catch((err) => console.log(`Error: ${err}`));
 }
 
+/* Menu */
 function getPlatos() {
   return fetch(`${url}/platos`, {})
     .then(function(res) {
@@ -21,6 +22,22 @@ function getPlatos() {
     .catch((err) => console.log(err));
 }
 
+/* function createPlato(id, medida) {
+  const data = { nombre: nombre, cantidad: cantidad, medida: medida };
+  return fetch(`${url}/stock`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
+}  */
+
+/* Fin de Menu */
+
+/* Inventario */
 function getStock() {
   return fetch(`${url}/stock`, {})
     .then(function(res) {
@@ -29,8 +46,60 @@ function getStock() {
     .catch((err) => console.log(err));
 }
 
+function createStock(nombre, cantidad, medida) {
+  const data = { nombre: nombre, cantidad: cantidad, medida: medida };
+  return fetch(`${url}/stock`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
+}
+
+function deleteStock(id) {
+  const data = { id: id };
+  return fetch(`${url}/stock`, {
+    method: 'DELETE',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
+}
+/* Fin inventario */
+
+/* Ordenes */
+function getOrders() {
+  return fetch(`${url}/ordenes/2020/5`, {})
+    .then(function(res) {
+      return res.json();
+    })
+    .catch((err) => console.log(err));
+}
+/* Fin Ordenes */
+
+/* Descuentos */
+function getDescuentos() {
+  return fetch(`${url}/bono??aa=2020&&mm=03`, {})
+    .then(function(res) {
+      return res.json();
+    })
+    .catch((err) => console.log(err));
+}
+/* Fin descuentos */
+
 export default {
   login,
   getPlatos,
   getStock,
+  getOrders,
+  createStock,
+  getDescuentos,
+  deleteStock,
+  // createPlato
 };

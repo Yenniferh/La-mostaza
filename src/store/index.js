@@ -15,7 +15,7 @@ export default new Vuex.Store({
     dishes: [],
     orders: [],
     discounts: [],
-    stock: [],
+    products: [],
   },
   mutations: {
     restartLoading(state) {
@@ -46,6 +46,10 @@ export default new Vuex.Store({
 
     setDishes(state, payload = {}) {
       payload.dishes && (state.dishes = payload.dishes);
+    },
+
+    setProducts(state, payload = {}) {
+      payload.Products && (state.Products = payload.Products);
     },
   },
   actions: {},

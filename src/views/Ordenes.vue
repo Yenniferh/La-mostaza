@@ -1,6 +1,12 @@
 <template>
   <v-col cols="10" xs="10">
-    <v-data-table :headers="headers" :items="orders" sort-by="state" sort-desc class="elevation-1">
+    <v-data-table
+      :headers="headers"
+      :items="orders"
+      sort-by="state"
+      sort-desc
+      class="elevation-1"
+    >
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title class="text-capitalize">Órdenes</v-toolbar-title>
@@ -21,19 +27,34 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.client" label="Cliente"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.client"
+                        label="Cliente"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.table" label="Mesa"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.table"
+                        label="Mesa"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.waiter" label="Atendió"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.waiter"
+                        label="Atendió"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.date" label="Fecha"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.date"
+                        label="Fecha"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6" md="4">
-                      <v-text-field v-model="editedItem.state" label="Estado"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.state"
+                        label="Estado"
+                      ></v-text-field>
                     </v-col>
                   </v-row>
                 </v-container>
@@ -51,7 +72,14 @@
       <template v-slot:item.actions="{ item }">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-icon color="accent" small class="mr-1" @click="editItem(item)" v-on="on">mdi-eye</v-icon>
+            <v-icon
+              color="accent"
+              small
+              class="mr-1"
+              @click="editItem(item)"
+              v-on="on"
+              >mdi-eye</v-icon
+            >
           </template>
           <span>Ver orden</span>
         </v-tooltip>
@@ -63,19 +91,28 @@
               class="mr-1"
               @click="editItem(item)"
               v-on="on"
-            >mdi-file-document</v-icon>
+              >mdi-file-document</v-icon
+            >
           </template>
           <span>Generar orden</span>
         </v-tooltip>
         <v-tooltip v-if="item.state != 'FINALIZADO'" top>
           <template v-slot:activator="{ on }">
-            <v-icon color="red darken-1" small @click="deleteItem(item)" v-on="on">mdi-delete</v-icon>
+            <v-icon
+              color="red darken-1"
+              small
+              @click="deleteItem(item)"
+              v-on="on"
+              >mdi-delete</v-icon
+            >
           </template>
           <span>Eliminar orden</span>
         </v-tooltip>
       </template>
       <template v-slot:item.state="{ item }">
-        <v-chip :color="getColor(item.state)" dark small>{{ item.state }}</v-chip>
+        <v-chip :color="getColor(item.state)" dark small>{{
+          item.state
+        }}</v-chip>
       </template>
       <template v-slot:no-data>
         <v-btn color="primary" @click="initialize">Reset</v-btn>
@@ -85,128 +122,137 @@
 </template>
 
 <script>
+import api from '@/services/api';
+//import { mapState } from 'vuex';
 export default {
   data: () => ({
     dialog: false,
     headers: [
       {
-        text: "Cliente",
-        align: "start",
-        value: "client"
+        text: 'Cliente',
+        align: 'start',
+        value: 'client',
       },
-      { text: "Mesa", value: "table" },
-      { text: "Atendió", value: "waiter" },
-      { text: "Fecha", value: "date" },
-      { text: "Estado", value: "state" },
-      { text: "Acciones", value: "actions", sortable: false }
+      { text: 'Mesa', value: 'table' },
+      { text: 'Atendió', value: 'waiter' },
+      { text: 'Fecha', value: 'date' },
+      { text: 'Estado', value: 'state' },
+      { text: 'Acciones', value: 'actions', sortable: false },
     ],
     orders: [],
     editedIndex: -1,
     editedItem: {
-      client: "",
+      client: '',
       table: 0,
-      waiter: "",
-      date: "",
-      state: ""
+      waiter: '',
+      date: '',
+      state: '',
     },
     defaultItem: {
-      client: "",
+      client: '',
       table: 0,
-      waiter: "",
-      date: "",
-      state: ""
-    }
+      waiter: '',
+      date: '',
+      state: '',
+    },
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+    },
   },
 
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
   },
 
   created() {
-    this.initialize();
+    //this.initialize();
+    api.getOrders().then((orders) => {
+      console.log(orders);
+    });
   },
 
   methods: {
+    toggleLoading() {
+      this.$store.commit('toggleLoading');
+    },
+
     initialize() {
       this.orders = [
         {
-          client: "Andrea",
+          client: 'Andrea',
           table: 12,
-          waiter: "Berta",
-          date: "12/05/2020",
-          state: "FINALIZADO"
+          waiter: 'Berta',
+          date: '12/05/2020',
+          state: 'FINALIZADO',
         },
         {
-          client: "Melisa",
+          client: 'Melisa',
           table: 6,
-          waiter: "Berta",
-          date: "10/05/2020",
-          state: "PROCESANDO"
+          waiter: 'Berta',
+          date: '10/05/2020',
+          state: 'PROCESANDO',
         },
         {
-          client: "Juan",
+          client: 'Juan',
           table: 3,
-          waiter: "Pedro",
-          date: "14/05/2020",
-          state: "FINALIZADO"
+          waiter: 'Pedro',
+          date: '14/05/2020',
+          state: 'FINALIZADO',
         },
         {
-          client: "Humberto",
+          client: 'Humberto',
           table: 3,
-          waiter: "Berta",
-          date: "08/05/2020",
-          state: "PROCESANDO"
+          waiter: 'Berta',
+          date: '08/05/2020',
+          state: 'PROCESANDO',
         },
         {
-          client: "Leandro",
+          client: 'Leandro',
           table: 5,
-          waiter: "Luis",
-          date: "23/04/2020",
-          state: "PROCESANDO"
+          waiter: 'Luis',
+          date: '23/04/2020',
+          state: 'PROCESANDO',
         },
         {
-          client: "Arturo",
+          client: 'Arturo',
           table: 4,
-          waiter: "Pablo",
-          date: "12/05/2020",
-          state: "FINALIZADO"
+          waiter: 'Pablo',
+          date: '12/05/2020',
+          state: 'FINALIZADO',
         },
         {
-          client: "Patricia",
+          client: 'Patricia',
           table: 10,
-          waiter: "Pedro",
-          date: "12/05/2020",
-          state: "PROCESANDO"
+          waiter: 'Pedro',
+          date: '12/05/2020',
+          state: 'PROCESANDO',
         },
         {
-          client: "Yamile",
+          client: 'Yamile',
           table: 12,
-          waiter: "Luis",
-          date: "02/05/2020",
-          state: "FINALIZADO"
+          waiter: 'Luis',
+          date: '02/05/2020',
+          state: 'FINALIZADO',
         },
         {
-          client: "Paula",
+          client: 'Paula',
           table: 1,
-          waiter: "Pablo",
-          date: "01/05/2020",
-          state: "PROCESANDO"
+          waiter: 'Pablo',
+          date: '01/05/2020',
+          state: 'PROCESANDO',
         },
         {
-          client: "Hortencia",
+          client: 'Hortencia',
           table: 2,
-          waiter: "Ana",
-          date: "12/04/2020",
-          state: "PROCESANDO"
-        }
+          waiter: 'Ana',
+          date: '12/04/2020',
+          state: 'PROCESANDO',
+        },
       ];
     },
 
@@ -218,7 +264,7 @@ export default {
 
     deleteItem(item) {
       const index = this.orders.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
+      confirm('Are you sure you want to delete this item?') &&
         this.orders.splice(index, 1);
     },
 
@@ -239,9 +285,9 @@ export default {
       this.close();
     },
     getColor(state) {
-      if (state === "FINALIZADO") return "green";
-      else return "primary";
-    }
-  }
+      if (state === 'FINALIZADO') return 'green';
+      else return 'primary';
+    },
+  },
 };
 </script>
