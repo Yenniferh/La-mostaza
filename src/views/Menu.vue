@@ -52,9 +52,6 @@
                         label="Precio"
                       ></v-text-field>
                     </v-col>
-                    <!-- <v-col cols="12" sm="6" md="4">
-                          <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
-                    </v-col>-->
                   </v-row>
                 </v-container>
               </v-card-text>
@@ -69,19 +66,6 @@
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
-        <v-tooltip top>
-          <template v-slot:activator="{ on }">
-            <v-icon
-              color="accent"
-              small
-              class="mr-1"
-              @click="editItem(item)"
-              v-on="on"
-              >mdi-pencil</v-icon
-            >
-          </template>
-          <span>Editar plato</span>
-        </v-tooltip>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
             <v-icon
@@ -117,7 +101,7 @@ export default {
       { text: 'Categoría', value: 'cat' },
       { text: 'Precio', value: 'precio' },
       { text: 'Imagen', value: 'imageUrl' },
-      { text: 'Actions', value: 'actions', sortable: false },
+      { text: 'Actions', value: 'actions', sortable: false, align: 'center' },
     ],
     platos: [],
     editedIndex: -1,
@@ -141,12 +125,6 @@ export default {
     },
     selectOptions: ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Otro'],
   }),
-
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
-    },
-  },
 
   watch: {
     dialog(val) {
@@ -202,9 +180,10 @@ export default {
     },
 
     deleteItem(item) {
-      const index = this.desserts.indexOf(item);
-      confirm('Are you sure you want to delete this item?') &&
-        this.desserts.splice(index, 1);
+      api.deletePlato(item.id).then(() => {
+        const index = this.platos.indexOf(item);
+        this.setDishes({ dishes: this.platos.splice(index, 1) });
+      });
     },
 
     close() {

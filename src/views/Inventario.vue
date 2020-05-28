@@ -1,15 +1,6 @@
 <template>
   <v-col cols="10" xs="10">
-    <v-row v-if="this.isLoading" justify="center">
-      <v-progress-circular
-        indeterminate
-        color="primary"
-        class="my-5"
-        size="60"
-      ></v-progress-circular>
-    </v-row>
     <v-data-table
-      v-else
       :headers="headers"
       :items="this.products"
       sort-by="name"

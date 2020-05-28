@@ -33,7 +33,20 @@ function getPlatos() {
   })
     .then((res) => res)
     .catch((err) => console.log(`Error: ${err}`));
-}  */
+  }  */
+
+function deletePlato(id) {
+  const data = { id: id };
+  return fetch(`${url}/plato`, {
+    method: 'DELETE',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
+}
 
 /* Fin de Menu */
 
@@ -81,6 +94,19 @@ function getOrders() {
     })
     .catch((err) => console.log(err));
 }
+
+function deleteOrder(idorden, year, mes) {
+  const data = { idorden: idorden, year: year, mes: mes };
+  return fetch(`${url}/orden/eliminar`, {
+    method: 'DELETE',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
+}
 /* Fin Ordenes */
 
 /* Descuentos */
@@ -90,6 +116,31 @@ function getDescuentos() {
       return res.json();
     })
     .catch((err) => console.log(err));
+}
+
+function createDescuento(dct, mm, aa) {
+  const data = { dct: dct, mm: mm, aa: aa };
+  return fetch(`${url}/bono`, {
+    method: 'POST',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
+}
+function deleteDescuento(idbono, year, mes) {
+  const data = { idbono: idbono, year: year, mes: mes };
+  return fetch(`${url}/bono/eliminar`, {
+    method: 'DELETE',
+    body: JSON.stringify(data),
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  })
+    .then((res) => res)
+    .catch((err) => console.log(`Error: ${err}`));
 }
 /* Fin descuentos */
 
@@ -101,5 +152,9 @@ export default {
   createStock,
   getDescuentos,
   deleteStock,
+  deleteOrder,
+  deleteDescuento,
+  deletePlato,
+  createDescuento,
   // createPlato
 };
