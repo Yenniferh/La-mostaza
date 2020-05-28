@@ -1,9 +1,16 @@
 <template>
   <v-col cols="10" xs="10">
-    <v-data-table :headers="headers" :items="desserts" sort-by="name " class="elevation-1">
+    <v-data-table
+      :headers="headers"
+      :items="platos"
+      sort-by="name "
+      class="elevation-1"
+    >
       <template v-slot:top>
         <v-toolbar flat color="white">
-          <v-toolbar-title class="text-capitalize">Platos del Menú</v-toolbar-title>
+          <v-toolbar-title class="text-capitalize"
+            >Platos del Menú</v-toolbar-title
+          >
           <v-spacer></v-spacer>
           <v-dialog v-model="dialog" max-width="500px">
             <template v-slot:activator="{ on }">
@@ -21,10 +28,16 @@
                 <v-container>
                   <v-row>
                     <v-col cols="12" sm="12">
-                      <v-text-field v-model="editedItem.name" label="Nombre"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.name"
+                        label="Nombre"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="12">
-                      <v-text-field v-model="editedItem.description" label="Descripción"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.description"
+                        label="Descripción"
+                      ></v-text-field>
                     </v-col>
                     <v-col cols="12" sm="6">
                       <v-select
@@ -34,7 +47,10 @@
                       ></v-select>
                     </v-col>
                     <v-col cols="12" sm="6">
-                      <v-text-field v-model="editedItem.price" label="Precio"></v-text-field>
+                      <v-text-field
+                        v-model="editedItem.price"
+                        label="Precio"
+                      ></v-text-field>
                     </v-col>
                     <!-- <v-col cols="12" sm="6" md="4">
                           <v-text-field v-model="editedItem.protein" label="Protein (g)"></v-text-field>
@@ -55,152 +71,128 @@
       <template v-slot:item.actions="{ item }">
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-icon color="accent" small class="mr-1" @click="editItem(item)" v-on="on">mdi-pencil</v-icon>
+            <v-icon
+              color="accent"
+              small
+              class="mr-1"
+              @click="editItem(item)"
+              v-on="on"
+              >mdi-pencil</v-icon
+            >
           </template>
           <span>Editar plato</span>
         </v-tooltip>
         <v-tooltip top>
           <template v-slot:activator="{ on }">
-            <v-icon color="red darken-1" small @click="deleteItem(item)" v-on="on">mdi-delete</v-icon>
+            <v-icon
+              color="red darken-1"
+              small
+              @click="deleteItem(item)"
+              v-on="on"
+              >mdi-delete</v-icon
+            >
           </template>
           <span>Eliminar plato</span>
         </v-tooltip>
-      </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
   </v-col>
 </template>
 
 <script>
+import api from '@/services/api';
+
 export default {
-  name: "Menu",
+  name: 'Menu',
   data: () => ({
     dialog: false,
     headers: [
       {
-        text: "Nombre",
-        align: "start",
+        text: 'Nombre',
+        align: 'start',
         sortable: false,
-        value: "name"
+        value: 'name',
       },
-      { text: "Descripción", value: "description" },
-      { text: "Categoría", value: "category" },
-      { text: "Precio", value: "price" },
-      // { text: "Protein (g)", value: "protein" },
-      { text: "Actions", value: "actions", sortable: false }
+      { text: 'Descripción', value: 'desc', sortable: false },
+      { text: 'Categoría', value: 'cat' },
+      { text: 'Precio', value: 'precio' },
+      { text: 'Imagen', value: 'imageUrl' },
+      { text: 'Actions', value: 'actions', sortable: false },
     ],
-    desserts: [],
     platos: [],
     editedIndex: -1,
     editedItem: {
-      name: "",
-      description: "",
-      category: "",
-      price: 0
-      // protein: 0
+      id: '',
+      desc: '',
+      cat: '',
+      tiempo: '',
+      imageUrl: '',
+      precio: '',
+      name: '',
     },
     defaultItem: {
-      name: "",
-      description: "",
-      category: "",
-      price: 0
-      // protein: 0
+      id: '',
+      desc: '',
+      cat: '',
+      tiempo: '',
+      imageUrl: '',
+      precio: '',
+      name: '',
     },
-    selectOptions: ["Desayuno", "Almuerzo", "Cena", "Postre", "Otro"]
+    selectOptions: ['Desayuno', 'Almuerzo', 'Cena', 'Postre', 'Otro'],
   }),
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? "New Item" : "Edit Item";
-    }
+      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
+    },
   },
 
   watch: {
     dialog(val) {
       val || this.close();
-    }
+    },
   },
 
   created() {
-    this.initialize();
+    this.create();
   },
 
   methods: {
-    initialize() {
-      this.desserts = [
-        {
-          name: "Yogurt Suizo",
-          description: "Delicioso yogurt exportado",
-          category: "Desayuno",
-          price: 3800
-          // protein: 4.0
-        },
-        {
-          name: "Filete de salmón marinado",
-          description: "Jugoso filete de salmón bañado en salsa de naranja",
-          category: "Almuerzo",
-          price: 37000
-          // protein: 4.3
-        },
-        {
-          name: "Eclair",
-          description: "Delicioso postre de leche con mermelada de melocotón",
-          category: "Postre",
-          price: 8900
-          // protein: 6.0
-        },
-        {
-          name: "Cupcake",
-          description: "Disfruta esta tentación",
-          category: "Postre",
-          price: 2500
-          // protein: 4.3
+    create() {
+      this.toggleLoading();
+      api.getPlatos().then((platos) => {
+        const pl = Object.entries(platos);
+        console.log(pl);
+        for (let i = 0; i < pl.length; i++) {
+          let plato = pl[i][1];
+          let map = new Map(Object.entries(plato));
+          let newPlato = {
+            id: pl[i][0],
+            desc: map.get('desc'),
+            cat: map.get('cat'),
+            tiempo: map.get('tiempo'),
+            imageUrl: map.get('imageUrl'),
+            precio: map.get('precio'),
+            name: map.get('name'),
+          };
+          this.platos.push(newPlato);
         }
-        // {
-        //   name: "Gingerbread",
-        //   description: 356,
-        //   category: 16.0,
-        //   price: 49
-        //   // protein: 3.9
-        // },
-        // {
-        //   name: "Jelly bean",
-        //   description: 375,
-        //   category: 0.0,
-        //   price: 94
-        //   // protein: 0.0
-        // },
-        // {
-        //   name: "Lollipop",
-        //   description: 392,
-        //   category: 0.2,
-        //   price: 98
-        //   // protein: 0
-        // },
-        // {
-        //   name: "Honeycomb",
-        //   description: 408,
-        //   category: 3.2,
-        //   price: 87
-        //   // protein: 6.5
-        // },
-        // {
-        //   name: "Donut",
-        //   description: 452,
-        //   category: 25.0,
-        //   price: 51
-        //   // protein: 4.9
-        // },
-        // {
-        //   name: "KitKat",
-        //   description: 518,
-        //   category: 26.0,
-        //   price: 65
-        //   // protein: 7
-        // }
-      ];
+        this.setDishes({ dishes: this.platos });
+        this.toggleLoading();
+      });
+    },
+
+    restartLoading() {
+      this.$store.commit('restartLoading');
+    },
+
+    toggleLoading() {
+      this.$store.commit('toggleLoading');
+    },
+
+    setDishes(payload) {
+      this.$store.commit('setDishes', payload);
     },
 
     editItem(item) {
@@ -211,7 +203,7 @@ export default {
 
     deleteItem(item) {
       const index = this.desserts.indexOf(item);
-      confirm("Are you sure you want to delete this item?") &&
+      confirm('Are you sure you want to delete this item?') &&
         this.desserts.splice(index, 1);
     },
 
@@ -230,7 +222,10 @@ export default {
         this.desserts.push(this.editedItem);
       }
       this.close();
-    }
-  }
+    },
+  },
+  beforeDestroy() {
+    this.restartLoading();
+  },
 };
 </script>

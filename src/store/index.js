@@ -49,7 +49,15 @@ export default new Vuex.Store({
     },
 
     setProducts(state, payload = {}) {
-      payload.Products && (state.Products = payload.Products);
+      payload.products && (state.products = payload.products);
+    },
+
+    setOrders(state, payload = {}) {
+      payload.orders && (state.orders = payload.orders);
+    },
+
+    setDiscounts(state, payload = {}) {
+      payload.discounts && (state.discounts = payload.discounts);
     },
   },
   actions: {},

@@ -1,72 +1,16 @@
 <template>
-  <v-col cols="10" xs="10">
+  <v-col cols="12" xs="12">
     <v-data-table
       :headers="headers"
       :items="orders"
       sort-by="state"
       sort-desc
-      class="elevation-1"
+      class="elevation-1 px-2"
     >
       <template v-slot:top>
         <v-toolbar flat color="white">
           <v-toolbar-title class="text-capitalize">Órdenes</v-toolbar-title>
           <v-spacer></v-spacer>
-          <v-dialog v-model="dialog" max-width="500px">
-            <template v-slot:activator="{ on }">
-              <v-btn color="primary" dark class="mb-2" v-on="on">
-                Agregar
-                <v-icon class="ml-1">mdi-plus-circle</v-icon>
-              </v-btn>
-            </template>
-            <v-card>
-              <v-card-title>
-                <span class="headline">Agregar</span>
-              </v-card-title>
-
-              <v-card-text>
-                <v-container>
-                  <v-row>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.client"
-                        label="Cliente"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.table"
-                        label="Mesa"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.waiter"
-                        label="Atendió"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.date"
-                        label="Fecha"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12" sm="6" md="4">
-                      <v-text-field
-                        v-model="editedItem.state"
-                        label="Estado"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
-                </v-container>
-              </v-card-text>
-
-              <v-card-actions>
-                <v-spacer></v-spacer>
-                <v-btn color="red darken-1" text @click="close">Cancelar</v-btn>
-                <v-btn color="blue darken-1" text @click="save">Guardar</v-btn>
-              </v-card-actions>
-            </v-card>
-          </v-dialog>
         </v-toolbar>
       </template>
       <template v-slot:item.actions="{ item }">
@@ -109,13 +53,10 @@
           <span>Eliminar orden</span>
         </v-tooltip>
       </template>
-      <template v-slot:item.state="{ item }">
-        <v-chip :color="getColor(item.state)" dark small>{{
-          item.state
+      <template v-slot:item.estado="{ item }">
+        <v-chip :color="getColor(item.estado)" dark small>{{
+          item.estado.toUpperCase()
         }}</v-chip>
-      </template>
-      <template v-slot:no-data>
-        <v-btn color="primary" @click="initialize">Reset</v-btn>
       </template>
     </v-data-table>
   </v-col>
@@ -129,137 +70,74 @@ export default {
     dialog: false,
     headers: [
       {
-        text: 'Cliente',
+        text: 'IDCliente',
         align: 'start',
-        value: 'client',
+        value: 'idcliente',
       },
-      { text: 'Mesa', value: 'table' },
-      { text: 'Atendió', value: 'waiter' },
-      { text: 'Fecha', value: 'date' },
-      { text: 'Estado', value: 'state' },
+      { text: 'Mesa', value: 'nmesa' },
+      { text: 'IDMesero', value: 'idmesero' },
+      { text: 'Fecha', value: 'fecha' },
+      { text: 'Hora', value: 'hora' },
+      { text: 'N° Factura', value: 'nfactura' },
+      { text: 'Total', value: 'total' },
+      { text: 'Estado', value: 'estado' },
       { text: 'Acciones', value: 'actions', sortable: false },
     ],
     orders: [],
-    editedIndex: -1,
-    editedItem: {
-      client: '',
-      table: 0,
-      waiter: '',
-      date: '',
-      state: '',
-    },
     defaultItem: {
-      client: '',
-      table: 0,
-      waiter: '',
-      date: '',
-      state: '',
+      id: '',
+      idcliente: '',
+      nmesa: '',
+      idmesero: '',
+      fecha: '',
+      hora: '',
+      nfactura: '',
+      total: '',
+      estado: '',
     },
   }),
 
-  computed: {
-    formTitle() {
-      return this.editedIndex === -1 ? 'New Item' : 'Edit Item';
-    },
-  },
-
-  watch: {
-    dialog(val) {
-      val || this.close();
-    },
-  },
-
   created() {
+    this.create();
     //this.initialize();
-    api.getOrders().then((orders) => {
-      console.log(orders);
-    });
   },
 
   methods: {
+    async create() {
+      this.toggleLoading();
+      api.getOrders().then((orders) => {
+        const or = Object.entries(orders);
+        for (let i = 0; i < or.length; i++) {
+          let prod = or[i][1];
+          let map = new Map(Object.entries(prod));
+          let newOrder = {
+            id: or[i][0],
+            idcliente: map.get('idcliente'),
+            nmesa: map.get('nmesa'),
+            idmesero: map.get('idmesero'),
+            fecha: `${map.get('year')}-${map.get('mes')}-${map.get('dia')}`,
+            hora: map.get('hora'),
+            nfactura: map.get('nfactura'),
+            total: map.get('total'),
+            estado: map.get('estado'),
+          };
+          this.orders.push(newOrder);
+        }
+        this.setOrders({ orders: this.orders });
+        this.toggleLoading();
+      });
+    },
+
+    restartLoading() {
+      this.$store.commit('restartLoading');
+    },
+
     toggleLoading() {
       this.$store.commit('toggleLoading');
     },
 
-    initialize() {
-      this.orders = [
-        {
-          client: 'Andrea',
-          table: 12,
-          waiter: 'Berta',
-          date: '12/05/2020',
-          state: 'FINALIZADO',
-        },
-        {
-          client: 'Melisa',
-          table: 6,
-          waiter: 'Berta',
-          date: '10/05/2020',
-          state: 'PROCESANDO',
-        },
-        {
-          client: 'Juan',
-          table: 3,
-          waiter: 'Pedro',
-          date: '14/05/2020',
-          state: 'FINALIZADO',
-        },
-        {
-          client: 'Humberto',
-          table: 3,
-          waiter: 'Berta',
-          date: '08/05/2020',
-          state: 'PROCESANDO',
-        },
-        {
-          client: 'Leandro',
-          table: 5,
-          waiter: 'Luis',
-          date: '23/04/2020',
-          state: 'PROCESANDO',
-        },
-        {
-          client: 'Arturo',
-          table: 4,
-          waiter: 'Pablo',
-          date: '12/05/2020',
-          state: 'FINALIZADO',
-        },
-        {
-          client: 'Patricia',
-          table: 10,
-          waiter: 'Pedro',
-          date: '12/05/2020',
-          state: 'PROCESANDO',
-        },
-        {
-          client: 'Yamile',
-          table: 12,
-          waiter: 'Luis',
-          date: '02/05/2020',
-          state: 'FINALIZADO',
-        },
-        {
-          client: 'Paula',
-          table: 1,
-          waiter: 'Pablo',
-          date: '01/05/2020',
-          state: 'PROCESANDO',
-        },
-        {
-          client: 'Hortencia',
-          table: 2,
-          waiter: 'Ana',
-          date: '12/04/2020',
-          state: 'PROCESANDO',
-        },
-      ];
-    },
-
-    editItem(item) {
-      this.editedIndex = this.orders.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
+    setOrders(payload) {
+      this.$store.commit('setOrders', payload);
     },
 
     deleteItem(item) {
@@ -268,26 +146,13 @@ export default {
         this.orders.splice(index, 1);
     },
 
-    close() {
-      this.dialog = false;
-      this.$nextTick(() => {
-        this.editedItem = Object.assign({}, this.defaultItem);
-        this.editedIndex = -1;
-      });
-    },
-
-    save() {
-      if (this.editedIndex > -1) {
-        Object.assign(this.orders[this.editedIndex], this.editedItem);
-      } else {
-        this.orders.push(this.editedItem);
-      }
-      this.close();
-    },
     getColor(state) {
-      if (state === 'FINALIZADO') return 'green';
+      if (state === 'finalizado') return 'green';
       else return 'primary';
     },
+  },
+  beforeDestroy() {
+    this.restartLoading();
   },
 };
 </script>

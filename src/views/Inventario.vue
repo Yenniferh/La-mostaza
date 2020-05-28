@@ -128,16 +128,6 @@ export default {
 
   created() {
     this.create();
-    /*     api.getStock().then((prod) => {
-      
-    }); */
-    //funciona
-    /*  api
-      .createStock('Limon', 10, 'unidades')
-      .then((res) => console.log(res.status)); */
-    /*     api
-      .deleteStock('n2ZtlzSJ1MUMD6rviDQl')
-      .then((res) => console.log(res.status)); */
   },
 
   methods: {
@@ -145,7 +135,6 @@ export default {
       this.toggleLoading();
       api.getStock().then((products) => {
         const pr = Object.entries(products);
-        console.log(pr);
         for (let i = 0; i < pr.length; i++) {
           let prod = pr[i][1];
           let map = new Map(Object.entries(prod));
@@ -157,7 +146,6 @@ export default {
           };
           this.products.push(newProd);
         }
-        console.log(this.products);
         this.setProducts({ products: this.products });
         this.toggleLoading();
       });
@@ -174,87 +162,6 @@ export default {
     setProducts(payload) {
       this.$store.commit('setProducts', payload);
     },
-
-    initialize() {
-      this.products = [
-        {
-          name: 'Yogurt',
-          description: 'Ninguna',
-          quantity: 6,
-          unit: 'L',
-          valuePerUnit: 7800,
-        },
-        {
-          name: 'Mantequilla',
-          description: 'Frescampo',
-          quantity: 9,
-          unit: 'gr',
-          valuePerUnit: 2300,
-        },
-        {
-          name: 'Jugo de durazno',
-          description: 'Ninguna',
-          quantity: 16,
-          unit: 'L',
-          valuePerUnit: 4600,
-        },
-        {
-          name: 'Harina de trigo',
-          description: 'Ninguna',
-          quantity: 3,
-          unit: 'lb',
-          valuePerUnit: 1800,
-        },
-        {
-          name: 'Lenteja',
-          description: 'Ninguna',
-          quantity: 16,
-          unit: 'lb',
-          valuePerUnit: 1300,
-        },
-        {
-          name: 'Arroz',
-          description: 'Esta vez arroz diana',
-          quantity: 70,
-          unit: 'lb',
-          valuePerUnit: 1700,
-        },
-        {
-          name: 'Pollo',
-          description: 'Ninguna',
-          quantity: 3,
-          unit: 'lb',
-          valuePerUnit: 3000,
-        },
-        {
-          name: 'Yuca',
-          description: 'Ninguna',
-          quantity: 3,
-          unit: 'lb',
-          valuePerUnit: 900,
-        },
-        {
-          name: 'Papa',
-          description: 'Ninguna',
-          quantity: 25,
-          unit: 'lb',
-          valuePerUnit: 750,
-        },
-        {
-          name: 'Helado',
-          description: 'Ninguna',
-          quantity: 26,
-          unit: 'L',
-          valuePerUnit: 12000,
-        },
-      ];
-    },
-
-    /*     editItem(item) {
-      this.editedIndex = this.products.indexOf(item);
-      this.editedItem = Object.assign({}, item);
-      this.dialog = true;
-    }, */
 
     deleteItem(item) {
       api.deleteStock(item.id).then(() => {

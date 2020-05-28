@@ -85,7 +85,7 @@ function getOrders() {
 
 /* Descuentos */
 function getDescuentos() {
-  return fetch(`${url}/bono??aa=2020&&mm=03`, {})
+  return fetch(`${url}/bono??aa=2020`, {})
     .then(function(res) {
       return res.json();
     })
