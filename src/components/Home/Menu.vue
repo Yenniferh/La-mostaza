@@ -85,6 +85,7 @@ export default {
     api.getPlatos().then((platos) => {
       console.log(platos);
     });
+    api.getStock().then((inv) => console.log(inv));
   },
 };
 </script>

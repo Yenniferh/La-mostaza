@@ -2,7 +2,12 @@
   <v-container fluid class="fill-height accent lighten-4">
     <v-col cols="12" xs="6">
       <v-row justify="center" align="center">
-        <v-card elevation="3" max-width="400" color="white">
+        <v-card
+          v-if="!this.$store.state.isLoading"
+          elevation="3"
+          max-width="400"
+          color="white"
+        >
           <v-card-title>
             <div class="d-flex flex-column">
               <v-icon class="my-3" color="black" size="80"
@@ -45,6 +50,11 @@
             </v-form>
           </v-card-text>
         </v-card>
+        <v-progress-circular
+          v-else
+          indeterminate
+          color="primary"
+        ></v-progress-circular>
       </v-row>
     </v-col>
   </v-container>
@@ -52,6 +62,7 @@
 
 <script>
 import api from '@/services/api.js';
+import { mapState /* mapMutations */ } from 'vuex';
 export default {
   name: 'Register',
   data: () => ({
@@ -64,16 +75,39 @@ export default {
     password: '',
     passwordRules: [(v) => !!v || 'Password is required'],
   }),
+  computed: mapState(['isLoading']),
   methods: {
+    //...mapMutations(['setLoginVariables']),
+
+    toggleLoading() {
+      this.$store.commit('toggleLoading');
+    },
+
+    setLoginVariables(payload) {
+      this.$store.commit('setLoginVariables', payload);
+    },
+
     async login() {
       this.$refs.form.validate();
       if (this.valid) {
-        api.login('wx@wx.com', '123456').then((res) => console.log(res));
+        this.toggleLoading();
+        api.login(this.email, this.password).then((res) => {
+          console.log(res);
+          this.setLoginVariables({
+            email: res['email'],
+            type: res['tipo'],
+            token: res['token'],
+          });
+          this.toggleLoading();
+          this.$router.push('/admin/dashboard');
+        });
         //api.getAssets().then((res) => console.log(res));
         /*         setTimeout(() => {
           alert(`email: ${this.email} pass: ${this.password}`);
           this.$router.push("/admin/dashboard");
         }, [4000]); */
+
+        //api.login2();
       }
     },
   },

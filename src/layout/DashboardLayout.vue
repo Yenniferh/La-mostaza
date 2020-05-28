@@ -22,7 +22,9 @@
                 width="40"
               />
             </v-list-item-avatar>
-            <v-list-item-title class="title primary--text">La Mostaza</v-list-item-title>
+            <v-list-item-title class="title primary--text"
+              >La Mostaza</v-list-item-title
+            >
             <v-list-item-subtitle>Panel administrativo</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
@@ -30,7 +32,12 @@
         <v-divider></v-divider>
 
         <v-list dense nav class="py-3 my-2">
-          <v-list-item v-for="item in items" :key="item.label" link :to="{path:item.path}">
+          <v-list-item
+            v-for="item in items"
+            :key="item.label"
+            link
+            :to="{ path: item.path }"
+          >
             <v-list-item-icon>
               <v-icon color="primary" size="30">{{ item.icon }}</v-icon>
             </v-list-item-icon>
@@ -48,11 +55,12 @@
           <router-link
             :to="$route.path"
             class="primary-text text-uppercase text-dec"
-          >{{$route.name}}</router-link>
+            >{{ $route.name }}</router-link
+          >
         </v-toolbar-title>
         <v-spacer />
         <router-link to="/home">
-          <v-btn color="primary" small>Cerrar sesión</v-btn>
+          <v-btn color="primary" @click="Logout" small>Cerrar sesión</v-btn>
         </router-link>
       </v-app-bar>
     </v-container>
@@ -70,9 +78,13 @@
 
     <v-footer v-if="!this.$vuetify.breakpoint.smAndUp" app padless>
       <v-bottom-navigation shift color="primary">
-        <v-btn v-for="item in items" :key="item.label" :to="{path:item.path}">
-          <span>{{item.label}}</span>
-          <v-icon>{{item.icon}}</v-icon>
+        <v-btn
+          v-for="item in items"
+          :key="item.label"
+          :to="{ path: item.path }"
+        >
+          <span>{{ item.label }}</span>
+          <v-icon>{{ item.icon }}</v-icon>
         </v-btn>
       </v-bottom-navigation>
     </v-footer>
@@ -80,39 +92,42 @@
 </template>
 
 <script>
-const startPath = "/admin";
+const startPath = '/admin';
+import { mapMutations } from 'vuex';
+
 export default {
   data: () => ({
     items: [
       {
-        icon: "mdi-finance",
-        label: "Balance",
-        path: startPath + "/dashboard"
+        icon: 'mdi-finance',
+        label: 'Balance',
+        path: startPath + '/dashboard',
       },
       {
-        icon: "mdi-silverware",
-        label: "Menú",
-        path: startPath + "/menu"
+        icon: 'mdi-silverware',
+        label: 'Menú',
+        path: startPath + '/menu',
       },
       {
-        icon: "mdi-fridge",
-        label: "Inventario",
-        path: startPath + "/inventario"
+        icon: 'mdi-fridge',
+        label: 'Inventario',
+        path: startPath + '/inventario',
       },
       {
-        icon: "mdi-nutrition",
-        label: "Órdenes",
-        path: startPath + "/ordenes"
+        icon: 'mdi-nutrition',
+        label: 'Órdenes',
+        path: startPath + '/ordenes',
       },
       {
-        icon: "mdi-sale",
-        label: "Descuentos",
-        path: startPath + "/descuentos"
-      }
+        icon: 'mdi-sale',
+        label: 'Descuentos',
+        path: startPath + '/descuentos',
+      },
     ],
     footer: {
-      inset: false
-    }
-  })
+      inset: false,
+    },
+  }),
+  methods: mapMutations(['Logout']),
 };
 </script>
