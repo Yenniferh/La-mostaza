@@ -4,7 +4,7 @@ Sabores que cautivan el paladar. Recetas únicas que enamoran.
 
 # Proyecto
 
-Este aplicativo web hace parte del trabajo final de la asignatura Gestión de TI donde aprendimos lás prácticas más importantes del PMI para la gestión de proyectos.
+Este aplicativo web hace parte del trabajo final de la asignatura Gestión de TI donde aprendimos las prácticas más importantes del PMI para la gestión de proyectos.
 
 ## Planteamiento del problema
 
@@ -12,7 +12,7 @@ El restaurante La Mostaza inconvenientes en la administración de pedidos, los t
 
 ## Justificación del proyecto
 
-Permitirá optimizar tiempos de atención, organizar órdenes y tener seguimiento del inventario e implementar facturación POS
+Permitirá optimizar tiempos de atención, organizar órdenes y tener seguimiento del inventario e implementar facturación POS.
 
 ## Descripción del proyecto y alcance
 
@@ -42,3 +42,23 @@ La lógica del negocio en el back-end permite:
 - Registro de usuario
 - Gestión de privilegios de usuarios
 - Administración de códigos promocionales
+
+## Equipo
+
+- [Franklin Zabaleta](https://github.com/Franklinz98) (Desarrollo app móvil)
+- [Yennifer Herrera](https://github.com/Yenniferh) (Desarrollo app web)
+- [Willian Garcia](https://github.com/wgarcia1309) (Desarrollo backend)
+- Cristian Zapata (Desarrollo backend)
+
+# Aplicación web
+
+## Stack
+
+- Vue.js
+- Vuetify
+- Vue Router
+- Vuex
+
+## Demo
+
+[Ver demo en YouTube](https://youtu.be/f9lzagcEhWs)
